@@ -1,0 +1,50 @@
+experiment_name: efficientnet_b0_transfer
+seed: 42
+
+data:
+  raw_dir: data/raw
+  processed_dir: data/processed
+  external_dir: data/external
+  class_names: []
+  imbalance_strategy: weighted_sampler
+  augmentation:
+    horizontal_flip: true
+    vertical_flip: false
+    rotation_degrees: 10
+    color_jitter: 0.15
+    random_resized_crop_scale: [0.75, 1.0]
+
+model:
+  architecture: efficientnet_b0
+  num_classes: 2
+  pretrained: true
+  freeze_backbone: false
+  dropout: 0.2
+  checkpoint_path: models/checkpoints/efficientnet_b0_best.pt
+  registry_path: models/registry/efficientnet_b0_latest.pt
+
+training:
+  batch_size: 24
+  epochs: 12
+  learning_rate: 0.0002
+  weight_decay: 0.0001
+  image_size: 224
+  num_workers: 2
+  label_smoothing: 0.05
+  best_metric: f1_score
+  early_stopping_patience: 5
+
+evaluation:
+  output_dir: data/processed/evaluation
+  top_k: 3
+  max_error_samples: 25
+
+mlflow:
+  tracking_uri: http://localhost:5000
+  experiment_name: vision-mlops-classifier
+  run_name: efficientnet-b0-transfer
+
+export:
+  onnx_path: models/exported/efficientnet_b0.onnx
+  opset_version: 17
+  dynamic_axes: true

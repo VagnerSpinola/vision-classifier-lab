@@ -1,0 +1,52 @@
+{
+  "title": "Vision MLOps Classifier",
+  "timezone": "browser",
+  "schemaVersion": 39,
+  "version": 1,
+  "panels": [
+    {
+      "type": "timeseries",
+      "title": "Request Rate",
+      "targets": [
+        {
+          "expr": "sum(rate(vision_classifier_requests_total[5m]))",
+          "legendFormat": "requests/sec"
+        }
+      ],
+      "gridPos": {"h": 8, "w": 12, "x": 0, "y": 0}
+    },
+    {
+      "type": "timeseries",
+      "title": "Prediction Volume",
+      "targets": [
+        {
+          "expr": "sum(rate(vision_classifier_predictions_total[5m])) by (backend)",
+          "legendFormat": "{{backend}}"
+        }
+      ],
+      "gridPos": {"h": 8, "w": 12, "x": 12, "y": 0}
+    },
+    {
+      "type": "timeseries",
+      "title": "Request Latency P95",
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.95, sum(rate(vision_classifier_request_latency_seconds_bucket[5m])) by (le))",
+          "legendFormat": "p95 latency"
+        }
+      ],
+      "gridPos": {"h": 8, "w": 12, "x": 0, "y": 8}
+    },
+    {
+      "type": "stat",
+      "title": "Model Loaded",
+      "targets": [
+        {
+          "expr": "vision_classifier_model_loaded",
+          "legendFormat": "loaded"
+        }
+      ],
+      "gridPos": {"h": 8, "w": 12, "x": 12, "y": 8}
+    }
+  ]
+}
